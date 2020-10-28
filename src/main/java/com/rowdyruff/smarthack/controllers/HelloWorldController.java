@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rowdyruff.domain.User;
+import com.rowdyruff.repository.UserRepository;
 import com.rowdyruff.smarthack.model.AuthenticationRequest;
 import com.rowdyruff.smarthack.model.AuthenticationResponse;
+import com.rowdyruff.smarthack.model.RegisterForm;
 import com.rowdyruff.smarthack.service.MyUserDetailsService;
 import com.rowdyruff.smarthack.utils.JwtUtils;
 
@@ -24,6 +27,9 @@ public class HelloWorldController {
 	
 	@Autowired
 	private MyUserDetailsService userDetailsService;
+	
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Autowired
 	private JwtUtils jwtTokenUtil;
@@ -48,6 +54,11 @@ public class HelloWorldController {
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
 		
 		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+	}
+	
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public ResponseEntity<?> register(@RequestBody RegisterForm registerForm) {
+		return ResponseEntity.ok(userRepository.create(new User(registerForm.getUsername(), registerForm.getPassword())));
 	}
 	
 }

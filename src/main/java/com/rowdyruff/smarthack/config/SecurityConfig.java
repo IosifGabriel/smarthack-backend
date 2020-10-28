@@ -32,7 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			"/v2/api-docs",
 			"/webjars/**",
 			// auth
-			"/authenticate"
+			"/authenticate",
+			"/register"
 			};
 
 	
