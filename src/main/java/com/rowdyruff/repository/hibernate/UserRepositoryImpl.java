@@ -22,11 +22,11 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<User> implements U
 	@Override
 	public User findByUsername(String username) {
 		if (cb == null)
-			cb = sessionFactory.getCriteriaBuilder();
+			cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<User> crit = cb.createQuery(clazz);
 		Root<User> root = crit.from(clazz);
 		crit.where(cb.equal(root.get("username"), username));
-		TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery(crit);
+		TypedQuery<User> query = entityManager.createQuery(crit);
 		try {
 			return query.getSingleResult();
 		} catch (NoResultException e) {

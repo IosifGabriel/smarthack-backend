@@ -22,7 +22,11 @@ public class SmarthackApplication {
 	
 	@EventListener(ApplicationReadyEvent.class)
 	public void doSomethingAfterStartup() {
-	    userRepository.create(new User("foo", "foo"));
+		try {
+			userRepository.create(new User("foo", "foo"));
+		} catch (Exception ex) {
+			return;
+		}
 	}
 
 }

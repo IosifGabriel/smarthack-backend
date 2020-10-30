@@ -1,5 +1,7 @@
 package com.rowdyruff.smarthack.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +13,7 @@ import com.rowdyruff.domain.User;
 import com.rowdyruff.repository.UserRepository;
 
 @Service
+@Transactional
 public class MyUserDetailsService implements UserDetailsService {
 	
 	@Autowired
@@ -18,8 +21,6 @@ public class MyUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		if (username == "foo")
-			return new MyUserPrincipal(new User("foo", "food"));
 		userRepository.findAll();
 		User user = userRepository.findByUsername(username);
 		if (user == null) {
