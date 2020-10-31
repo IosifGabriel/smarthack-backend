@@ -4,6 +4,16 @@ package com.rowdyruff.smarthack.controllers;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.rowdyruff.smarthack.service.GenericService;
 
 public abstract class GenericController<T extends Serializable> implements Serializable {
@@ -26,6 +36,42 @@ public abstract class GenericController<T extends Serializable> implements Seria
 
         return items;
     }
+    
+    @GetMapping
+	@ResponseBody
+	public ResponseEntity<?> getItems() {
+    	List<T> items = null;
+    	try {
+    		items = listItems();
+    	} catch (Exception ex) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex);
+    	}
+    
+		return ResponseEntity.ok(items);
+	}
+    
+    @GetMapping(value = "/{id}")
+	public ResponseEntity<?> getItem(@PathVariable("id") Integer id) {
+    	T item = null;
+    	try {
+    		item = service.getItem(id);
+    	} catch (NoResultException ex) {
+    		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    	}
+    
+		return ResponseEntity.ok(item);
+	}
+    
+    @DeleteMapping
+	public ResponseEntity<?> delete(@RequestBody Integer id) {
+    	String msg = null;
+		try {
+			msg = deleteItem(id);
+			return ResponseEntity.ok(msg);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
+		}
+	}
 
     public void editItem(Integer id) {
         T item = null;

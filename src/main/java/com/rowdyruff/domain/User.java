@@ -27,16 +27,19 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "FIRST_NAME", nullable = false)
+	@Column(name = "USERNAME", nullable = false)
+	private String username;
+	
+	@Column(name = "FIRST_NAME", nullable = true)
 	private String firstName;
 	
-	@Column(name = "LAST_NAME", nullable = false)
+	@Column(name = "LAST_NAME", nullable = true)
 	private String lastName;
 	
-	@Column(name = "EMAIL", nullable = false)
+	@Column(name = "EMAIL", nullable = true)
 	private String email;
 	
-	@Column(name = "CNP", nullable = false)
+	@Column(name = "CNP", nullable = true)
 	private String cnp;
 	
 	@Enumerated(EnumType.STRING)
@@ -51,6 +54,7 @@ public class User implements Serializable {
 
 	public User(String cnp, String password) {
 		this.cnp = cnp;
+		this.username = cnp;
 		this.password =  password;
 	}
 
