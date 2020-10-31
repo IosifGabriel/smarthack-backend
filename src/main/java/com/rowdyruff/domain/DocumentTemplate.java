@@ -1,14 +1,13 @@
 package com.rowdyruff.domain;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -27,13 +26,13 @@ public class DocumentTemplate implements Serializable {
 	@Column(name = "NAME", nullable = false)
 	private String name;
 	
-	@Convert(converter = HashMapConverterString.class)
-	@Column(name = "FIELDS_MAP", nullable = false)
-    private Map<String, String> fieldsMap;
+	@Lob
+	@Column(name = "DOC_TEMPLATE")
+	private byte[] docTemplate;
 
-	public DocumentTemplate(String name, Map<String, String> fieldsMap) {
+	public DocumentTemplate(String name, byte[] docTemplate) {
 		this.name = name;
-		this.fieldsMap = fieldsMap;
+		this.docTemplate = docTemplate;
 	}
 
 	public DocumentTemplate() {

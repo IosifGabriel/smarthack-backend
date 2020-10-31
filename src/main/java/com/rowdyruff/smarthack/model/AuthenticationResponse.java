@@ -1,15 +1,21 @@
 package com.rowdyruff.smarthack.model;
 
+import com.rowdyruff.domain.User;
+
+import lombok.Data;
+
+@Data
 public class AuthenticationResponse {
 
-	private final String jwt;
+	private User user;
+	
+	private String jwt;
 
-	public AuthenticationResponse(String jwt) {
+	public AuthenticationResponse(User user, String jwt) {
+		this.user = user;
 		this.jwt = jwt;
 	}
-
-	public String getJwt() {
-		return jwt;
-	}
+	
 	
 }
+

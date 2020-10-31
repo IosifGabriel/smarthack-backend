@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rowdyruff.domain.DocumentTemplate;
-import com.rowdyruff.domain.Institution;
 import com.rowdyruff.smarthack.model.DocumentTemplateRequest;
-import com.rowdyruff.smarthack.model.InstitutionRequest;
 import com.rowdyruff.smarthack.service.DocumentTemplateService;
 import com.rowdyruff.smarthack.service.GenericService;
 
@@ -34,7 +32,7 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 	public ResponseEntity<?> addDocumentTemplate(@RequestBody DocumentTemplateRequest request) {
 		String msg = null;
 		try {
-			msg = saveItem(new DocumentTemplate(request.getName(), request.getFieldsMap()));
+			msg = saveItem(new DocumentTemplate(request.getName(), request.getDocTemplate()));
 			return ResponseEntity.ok(msg);
 		} catch (Exception ex) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
@@ -44,8 +42,8 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<?> editDocumentTemplate(@PathVariable("id") Integer id, @RequestBody DocumentTemplateRequest request) {
 		DocumentTemplate item = service.getItem(id);
-		if (request.getFieldsMap() != null)
-			item.setFieldsMap(request.getFieldsMap());
+		if (request.getDocTemplate() != null)
+			item.setDocTemplate(request.getDocTemplate());
 		
 		if (request.getName() != null)
 			item.setName(request.getName());

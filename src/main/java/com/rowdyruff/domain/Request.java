@@ -53,6 +53,10 @@ public class Request implements Serializable {
 	)
 	private List<Document> requiredDocuments;
 	
+	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=false)
+	@JoinColumn(name="REQUESTED_DOCUMENT_TEMPLATE_ID", nullable=false, updatable=true, insertable=true)
+	private DocumentTemplate requestedDocumentTemplate;
+	
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "RESPONSE_ID", nullable=true)
 	private Response response;

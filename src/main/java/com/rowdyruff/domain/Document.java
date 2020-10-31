@@ -2,8 +2,10 @@ package com.rowdyruff.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -52,8 +54,12 @@ public class Document implements Serializable {
 	private User ownerUser;
 	
 	@ManyToOne(cascade= {}, fetch=FetchType.EAGER, optional=true)
-	@JoinColumn(name="REQUEST_ID", nullable=false, updatable=true, insertable=true)
+	@JoinColumn(name="REQUEST_ID", nullable=true, updatable=true, insertable=true)
 	private Request request;
+	
+	@Convert(converter = HashMapConverter.class)
+    @Column(name = "FIELDS_MAP")
+	private Map<String, String> fieldsMap;
 	
 	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=false)
 	@JoinColumn(name="DOCUMENT_TEMPLATE_ID", nullable=false)

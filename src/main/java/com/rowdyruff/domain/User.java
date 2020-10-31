@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rowdyruff.smarthack.model.CreateUserRequest;
+
 import lombok.Data;
 
 @Entity
@@ -50,6 +53,7 @@ public class User implements Serializable {
 	private Institution institution;
 	
 	@Column(name = "PASSWORD", nullable = false)
+	@JsonIgnore
 	private String password;
 
 	public User(String cnp, String password) {
@@ -61,6 +65,18 @@ public class User implements Serializable {
 	public User() {
 
 	}
+
+	public User(CreateUserRequest req, Institution institution) {
+		this.username = req.getCnp();
+		this.firstName = req.getFirstName();
+		this.lastName = req.getLastName();
+		this.cnp = req.getCnp();
+		this.role = Role.valueOf(req.getRole());
+		this.institution = institution;
+		this.password = req.getPassword();
+	}
+	
+	
 	
 	
 	

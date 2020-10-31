@@ -13,6 +13,7 @@ import com.rowdyruff.domain.User;
 import com.rowdyruff.repository.ResponseRepository;
 import com.rowdyruff.repository.UserRepository;
 import com.rowdyruff.smarthack.model.ResponseSubmission;
+import com.rowdyruff.smarthack.service.DocumentService;
 import com.rowdyruff.smarthack.service.RequestService;
 import com.rowdyruff.smarthack.service.ResponseService;
 import com.rowdyruff.smarthack.utils.JwtUtils;
@@ -31,6 +32,9 @@ public class ResponseServiceImpl extends GenericServiceImpl<Response> implements
 	
 	@Autowired
 	RequestService requestService;
+	
+	@Autowired
+	DocumentService documentService;
 
 	@Autowired
 	public ResponseServiceImpl(ResponseRepository responseRepository) {
@@ -61,6 +65,10 @@ public class ResponseServiceImpl extends GenericServiceImpl<Response> implements
 		response.setRequestStatus(accepted ? RequestStatus.APROVED : RequestStatus.DECLINIED);
 		
 		response = create(response);
+		
+		if (accepted) {
+			documentService.createDocument(req, response);
+		}
 		
 		return response;
 		
