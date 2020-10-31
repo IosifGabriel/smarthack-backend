@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -42,6 +43,7 @@ public class Response implements Serializable {
 	private RequestStatus requestStatus;
     
     @Convert(converter = HashMapConverter.class)
+    @Column(name = "DOCUMENT_STATUSES")
     private Map<Integer, String> documentStatuses;
 
 }

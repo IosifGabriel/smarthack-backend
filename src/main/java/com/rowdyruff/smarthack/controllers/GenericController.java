@@ -62,8 +62,8 @@ public abstract class GenericController<T extends Serializable> implements Seria
 		return ResponseEntity.ok(item);
 	}
     
-    @DeleteMapping
-	public ResponseEntity<?> delete(@RequestBody Integer id) {
+    @DeleteMapping(value = "/{id}")
+	public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
     	String msg = null;
 		try {
 			msg = deleteItem(id);

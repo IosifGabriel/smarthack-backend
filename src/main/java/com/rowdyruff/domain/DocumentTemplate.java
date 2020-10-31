@@ -27,7 +27,17 @@ public class DocumentTemplate implements Serializable {
 	@Column(name = "NAME", nullable = false)
 	private String name;
 	
-	@Convert(converter = HashMapConverter.class)
-    private Map<Integer, String> documentStatuses;
+	@Convert(converter = HashMapConverterString.class)
+	@Column(name = "FIELDS_MAP", nullable = false)
+    private Map<String, String> fieldsMap;
+
+	public DocumentTemplate(String name, Map<String, String> fieldsMap) {
+		this.name = name;
+		this.fieldsMap = fieldsMap;
+	}
+
+	public DocumentTemplate() {
+		
+	}
 
 }

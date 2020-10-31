@@ -6,4 +6,8 @@ import lombok.Data;
 public class InstitutionRequest {
 	
 	String name;
+	
+	String address;
+	
+	String abreviation;
 }
