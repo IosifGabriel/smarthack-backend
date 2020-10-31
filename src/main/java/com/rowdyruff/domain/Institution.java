@@ -27,8 +27,16 @@ public class Institution implements Serializable {
 	@Column(name = "NAME", nullable = false)
 	private String name;
 	
+	@Column(name = "ABREVIATION", nullable = false)
+	private String abreviation;
+	
+	@Column(name = "ADDRESS", nullable = false)
+	private String address;
+	
 	public Institution(InstitutionRequest institution) {
 		this.name = institution.getName();
+		this.address = institution.getAddress();
+		this.abreviation = institution.getAbreviation();
 	}
 
 	public Institution() {

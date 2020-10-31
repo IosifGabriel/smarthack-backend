@@ -10,28 +10,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rowdyruff.domain.DocumentTemplate;
 import com.rowdyruff.domain.Institution;
+import com.rowdyruff.smarthack.model.DocumentTemplateRequest;
 import com.rowdyruff.smarthack.model.InstitutionRequest;
-import com.rowdyruff.smarthack.service.InstitutionService;
+import com.rowdyruff.smarthack.service.DocumentTemplateService;
+import com.rowdyruff.smarthack.service.GenericService;
 
 @RestController
-@RequestMapping("/institutions")
-public class InstitutionsController extends GenericController<Institution> {
-	
-	private static final long serialVersionUID = 2537913914336345727L;
+@RequestMapping("/documentTemplates")
+public class DocumentTemplateController extends GenericController<DocumentTemplate> {
+
+	private static final long serialVersionUID = -816838120445629950L;
 	
 	@Autowired
-	InstitutionService institutionService;
+	DocumentTemplateService documentTemplateService;
 
-	public InstitutionsController(InstitutionService institutionService) {
-		super(institutionService);
+	public DocumentTemplateController(GenericService<DocumentTemplate> service) {
+		super(service);
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> addInstitution(@RequestBody InstitutionRequest request) {
+	public ResponseEntity<?> addDocumentTemplate(@RequestBody DocumentTemplateRequest request) {
 		String msg = null;
 		try {
-			msg = saveItem(new Institution(request));
+			msg = saveItem(new DocumentTemplate(request.getName(), request.getFieldsMap()));
 			return ResponseEntity.ok(msg);
 		} catch (Exception ex) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(msg);
@@ -39,31 +42,25 @@ public class InstitutionsController extends GenericController<Institution> {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<?> editInstitution(@PathVariable("id") Integer id, @RequestBody InstitutionRequest request) {
-		Institution item = service.getItem(id);
-		if (request.getAbreviation() != null)
-			item.setAbreviation(request.getAbreviation());
-		
-		if (request.getAddress() != null)
-			item.setAddress(request.getAddress());
+	public ResponseEntity<?> editDocumentTemplate(@PathVariable("id") Integer id, @RequestBody DocumentTemplateRequest request) {
+		DocumentTemplate item = service.getItem(id);
+		if (request.getFieldsMap() != null)
+			item.setFieldsMap(request.getFieldsMap());
 		
 		if (request.getName() != null)
 			item.setName(request.getName());
 		
 		return ResponseEntity.ok(service.update(item));
 	}
-	
-	
+
 	@Override
-	protected Institution getEmptyItem() {
-		return new Institution();
+	protected DocumentTemplate getEmptyItem() {
+		return new DocumentTemplate();
 	}
 
 	@Override
-	protected Boolean isNew(Institution item) {
+	protected Boolean isNew(DocumentTemplate item) {
 		return (item.getId() == null) || item.getId() < 1;
 	}
 	
-	
-
 }

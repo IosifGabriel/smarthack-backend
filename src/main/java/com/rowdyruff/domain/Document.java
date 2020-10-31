@@ -40,6 +40,9 @@ public class Document implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date expirationDate;
 	
+	@Column(name="B64_PDF", columnDefinition="TEXT")
+	private String b64Pdf;
+	
 	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=false)
 	@JoinColumn(name="INSTITUTION_ID", nullable=false, updatable=true, insertable=true)
 	private Institution institution;
@@ -52,6 +55,27 @@ public class Document implements Serializable {
 	@JoinColumn(name="REQUEST_ID", nullable=false, updatable=true, insertable=true)
 	private Request request;
 	
+	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=false)
+	@JoinColumn(name="DOCUMENT_TEMPLATE_ID", nullable=false)
 	private DocumentTemplate template;
+
+	public Document(Document other) {
+		this.name = other.name;
+		this.releaseDate = other.releaseDate;
+		this.expirationDate = other.expirationDate;
+		this.b64Pdf = other.b64Pdf;
+		this.institution = other.institution;
+		this.ownerUser = other.ownerUser;
+		this.request = other.request;
+		this.template = other.template;
+	}
+
+	public Document() {
+
+	}
+	
+	
+	
+	
 
 }
