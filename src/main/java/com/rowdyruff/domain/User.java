@@ -4,9 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -19,18 +24,34 @@ public class User implements Serializable {
 	private static final long serialVersionUID = -5476517849040239786L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "USERNAME", nullable = false, unique = true)
-	private String username;
+	@Column(name = "FIRST_NAME", nullable = false)
+	private String firstName;
+	
+	@Column(name = "LAST_NAME", nullable = false)
+	private String lastName;
+	
+	@Column(name = "EMAIL", nullable = false)
+	private String email;
+	
+	@Column(name = "CNP", nullable = false)
+	private String cnp;
+	
+	@Enumerated(EnumType.STRING)
+	private Role role;
+	
+	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=true)
+	@JoinColumn(name="INSTITUTION_ID", nullable=true, updatable=true, insertable=true)
+	private Institution institution;
 	
 	@Column(name = "PASSWORD", nullable = false)
 	private String password;
 
-	public User(String username, String password) {
-		this.username = username;
-		this.password = password;
+	public User(String cnp, String password) {
+		this.cnp = cnp;
+		this.password =  password;
 	}
 
 	public User() {
