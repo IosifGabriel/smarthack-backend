@@ -3,10 +3,7 @@ package com.rowdyruff.smarthack.model;
 import lombok.Data;
 
 @Data
-public class RegisterForm {
+public class InstitutionRequest {
 	
-	String username;
-	
-	String password;
-
+	String name;
 }

@@ -37,25 +37,8 @@ public class ToDoController extends GenericController<ToDo> {
 		return (item.getId() == null) || item.getId() < 1;
 	}
 	
-	@GetMapping
-	@ResponseBody
-	public ResponseEntity<?> getItems() {
-		return ResponseEntity.ok(listItems());
-	}
-	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> getItem(@PathVariable("id") Integer id) {
-		return ResponseEntity.ok(getItem(id));
-	}
-	
 	@PostMapping
 	public ResponseEntity<?> addTodo(@RequestBody String title) {
 		return ResponseEntity.ok(saveItem(new ToDo(title)));
 	}
-	
-	@DeleteMapping
-	public ResponseEntity<?> deleteToDo(@RequestBody Integer id) {
-		return ResponseEntity.ok(deleteItem(id));
-	}
-
 }

@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.rowdyruff.smarthack.model.InstitutionRequest;
+
 import lombok.Data;
 
 @Entity
@@ -24,6 +26,15 @@ public class Institution implements Serializable {
 	
 	@Column(name = "NAME", nullable = false)
 	private String name;
+	
+	public Institution(InstitutionRequest institution) {
+		this.name = institution.getName();
+	}
+
+	public Institution() {
+
+	}
+	
 	
 	
 }
