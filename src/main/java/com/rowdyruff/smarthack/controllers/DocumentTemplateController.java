@@ -41,17 +41,17 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 	
 	@PostMapping
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public ResponseEntity<?> addDocumentTemplate(@ModelAttribute DocumentTemplateRequest request) {
+	public ResponseEntity<?> addDocumentTemplate(@ModelAttribute DocumentTemplateRequest request, @RequestParam("file") MultipartFile file) {
 		String msg = null;
 
 		try {
 			var template = new DocumentTemplate();
 			template.setInstitution(institutionService.getItem(request.getInstitutionId()));
 			template.setName(request.getName());
-			if(request.getFile() == null) {
+			if(file == null) {
 				System.out.print("E NULL");
 			}
-			byte[] arr = request.getFile().getBytes();
+			byte[] arr = file.getBytes();
 			template.setDocTemplate(arr);
 			
 			msg = saveItem(template);

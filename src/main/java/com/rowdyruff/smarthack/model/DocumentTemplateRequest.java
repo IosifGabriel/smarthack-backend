@@ -15,6 +15,6 @@ public class DocumentTemplateRequest {
 	
 	private Integer institutionId;
 	
-	private MultipartFile file;
+	//private MultipartFile file;
 	
 }
