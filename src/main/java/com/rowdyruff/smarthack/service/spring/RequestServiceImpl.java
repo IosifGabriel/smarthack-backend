@@ -2,12 +2,14 @@ package com.rowdyruff.smarthack.service.spring;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rowdyruff.domain.Document;
+import com.rowdyruff.domain.DocumentTemplate;
 import com.rowdyruff.domain.Institution;
 import com.rowdyruff.domain.Request;
 import com.rowdyruff.domain.RequestStatus;
@@ -48,6 +50,13 @@ public class RequestServiceImpl extends GenericServiceImpl<Request> implements R
 		this.requestRepository = requestRepository;
 	}
 	
+	private byte[] createPdfFromFields(Map<String, String> fieldsMap, DocumentTemplate template) {
+		byte[] docx = documentService.buildDocxDocument(template, fieldsMap);
+		byte[] pdf = documentService.toPdf(docx);
+		
+		return pdf;
+	}
+	
 	public Request createRequest(RequestSubmission requestSubmission, String jwt) {	
 		Request request = new Request();
 		request.setRequiredDocuments(new ArrayList<Document>());
@@ -61,10 +70,13 @@ public class RequestServiceImpl extends GenericServiceImpl<Request> implements R
 		Institution institution = institutionService.getItem(requestSubmission.getInstitutionId());
 		request.setInstitution(institution);
 		
-		if (requestSubmission.getCompletedFieldsMap() != null && !requestSubmission.getCompletedFieldsMap().isEmpty())
-			request.setCompletedFieldsMap(requestSubmission.getCompletedFieldsMap());
-		
 		request.setRequestedDocumentTemplate(documentServiceTemplate.getItem(requestSubmission.getRequestedDocumentTemplateId()));
+		
+		if (requestSubmission.getCompletedFieldsMap() != null && !requestSubmission.getCompletedFieldsMap().isEmpty()) {
+			request.setCompletedFieldsMap(requestSubmission.getCompletedFieldsMap());
+			byte[] pdf = createPdfFromFields(requestSubmission.getCompletedFieldsMap(), request.getRequestedDocumentTemplate());
+			request.setGeneratedPdfFromFieldsMap(pdf);
+		}
 		
 		String username = jwtUtils.extractUsername(jwt);
 		User user = userRepository.findByUsername(username);

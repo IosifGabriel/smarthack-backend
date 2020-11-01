@@ -20,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Data;
 
@@ -67,5 +68,8 @@ public class Request implements Serializable {
 	@Convert(converter = HashMapConverterString.class)
     @Column(name = "COMPLETED_FIELDS_MAP", nullable = true)
 	private Map<String, String> completedFieldsMap;
+	
+	@Transient
+	private byte[] generatedPdfFromFieldsMap;
 
 }
