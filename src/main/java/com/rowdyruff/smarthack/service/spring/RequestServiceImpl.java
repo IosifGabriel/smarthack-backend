@@ -3,6 +3,7 @@ package com.rowdyruff.smarthack.service.spring;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,13 @@ public class RequestServiceImpl extends GenericServiceImpl<Request> implements R
 	public RequestServiceImpl(RequestRepository requestRepository) {
 		super.setRepository(requestRepository);
 		this.requestRepository = requestRepository;
+	}
+	
+	public List<Request> getRequestsOfClerk(Integer userId) {
+		var requests = requestRepository.findAll();
+		requests = requests.stream().filter(req -> req.getInstitution() != null && req.getInstitution().getId().equals(userId)).collect(Collectors.toList());
+		
+		return requests;
 	}
 	
 	private byte[] createPdfFromFields(Map<String, String> fieldsMap, DocumentTemplate template) {

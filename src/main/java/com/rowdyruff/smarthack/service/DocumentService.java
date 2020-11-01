@@ -1,6 +1,7 @@
 package com.rowdyruff.smarthack.service;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Map;
 
 import com.rowdyruff.domain.Document;
@@ -15,5 +16,7 @@ public interface DocumentService extends GenericService<Document> {
 	public byte[] buildDocxDocument(DocumentTemplate template, Map<String, String> fieldsMap);
 	
 	public byte[] toPdf(byte[] docx);
+	
+	public List<Document> getDocumentsOfUser(Integer userId);
 	
 }

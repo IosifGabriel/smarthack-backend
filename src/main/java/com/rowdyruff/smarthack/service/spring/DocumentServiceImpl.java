@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBElement;
 
@@ -126,6 +127,13 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
 		}
 		
 		return document;
+	}
+	
+	public List<Document> getDocumentsOfUser(Integer userId) {
+		var docs = documentRepository.findAll();
+		docs = docs.stream().filter(doc -> doc.getOwnerUser() != null && doc.getOwnerUser().getId().equals(userId)).collect(Collectors.toList());
+		
+		return docs;
 	}
 	
 	

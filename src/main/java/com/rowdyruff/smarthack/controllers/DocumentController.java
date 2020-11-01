@@ -50,21 +50,18 @@ public class DocumentController extends GenericController<Document> {
 //		}
 //	}
 	
-//	@GetMapping
-//	@ResponseBody
-//	@Override
-//	public ResponseEntity<?> getItems(@RequestHeader("Authorization") String jwt) {
-//		try {
-//			String username = jwtTokenUtil.extractUsername(jwt);
-//			User user = userRepository.findByUsername(username);
-//			return ResponseEntity.ok(documentService.getDocumentsOfUser(user));
-//		} catch (Exception ex) {
-//			ex.printStackTrace();
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-//		}
-		
-		
-//	}
+	@GetMapping("/myDocuments")
+	@ResponseBody
+	public ResponseEntity<?> getItems(@RequestHeader("Authorization") String jwt) {
+		try {
+			String username = jwtTokenUtil.extractUsername(jwt);
+			User user = userRepository.findByUsername(username);
+			return ResponseEntity.ok(documentService.getDocumentsOfUser(user.getId().intValue()));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}		
+	}
 	
 	@Override
 	protected Document getEmptyItem() {
