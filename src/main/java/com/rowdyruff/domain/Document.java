@@ -42,8 +42,8 @@ public class Document implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date expirationDate;
 	
-	@Column(name="B64_PDF", columnDefinition="TEXT")
-	private String b64Pdf;
+	@Column(name="DOCUMENT_BLOB")
+	private byte[] documentBlob;
 	
 	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=false)
 	@JoinColumn(name="INSTITUTION_ID", nullable=false, updatable=true, insertable=true)
@@ -69,7 +69,7 @@ public class Document implements Serializable {
 		this.name = other.name;
 		this.releaseDate = other.releaseDate;
 		this.expirationDate = other.expirationDate;
-		this.b64Pdf = other.b64Pdf;
+		this.documentBlob = other.documentBlob;
 		this.institution = other.institution;
 		this.ownerUser = other.ownerUser;
 		this.request = other.request;

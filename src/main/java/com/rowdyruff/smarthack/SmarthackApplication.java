@@ -1,10 +1,13 @@
 package com.rowdyruff.smarthack;
 
-import java.time.LocalDateTime;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -47,6 +50,7 @@ public class SmarthackApplication {
 		} catch (Exception ex) {
 			return;
 		}		
+		String pathToDoc = "C:\\Users\\Alex\\Downloads\\Document.docx";
 		
 		Institution institution = new Institution();
 		institution.setAbreviation("ANAF");
@@ -55,26 +59,31 @@ public class SmarthackApplication {
 		institution = institutionRepository.create(institution);
 		
 		DocumentTemplate templ = new DocumentTemplate();
-		byte[] docx = {};
-		templ.setDocTemplate(docx);
-		templ.setName("CErere Y");
-		templ = documentTemplateRepository.create(templ);
-		
+		try {
+		var stream = new ByteArrayInputStream(FileUtils.readFileToByteArray(new File(pathToDoc)));
+		byte[] docx = new byte[stream.available()];
+			stream.read(docx);
+			templ.setDocTemplate(docx);
+			templ.setName("CErere Y");
+			templ = documentTemplateRepository.create(templ);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		Document document = new Document();
 		document.setName("Hardcoded");
 		document.setExpirationDate(new Date());
 		document.setReleaseDate(new Date());
 		
-		document.setB64Pdf("NU E PDF");
+		//document.setDocumentBlob(docx);
 		document.setInstitution(institution);
 		document.setOwnerUser(userRepository.findOne(1));
 		document.setRequest(null);
 		document.setTemplate(templ);
 		
 		Map<String, String> fields = new HashMap<>();
-		fields.put("Nume", "Mandolina");
-		fields.put("Prenume", "victor");
-		fields.put("Domiciliu", "castravete");
+		fields.put("[placeholder]", "Mandolina");
+		fields.put("[inlocuiesc]", "victor");
+		fields.put("[data]", "castravete");
 		
 		document.setFieldsMap(fields);
 		documentRepository.create(document);
