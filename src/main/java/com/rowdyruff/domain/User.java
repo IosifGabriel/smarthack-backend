@@ -72,6 +72,7 @@ public class User implements Serializable {
 		this.lastName = req.getLastName();
 		this.cnp = req.getCnp();
 		this.role = Role.valueOf(req.getRole());
+		this.email = req.getEmail();
 		this.institution = institution;
 		this.password = req.getPassword();
 	}

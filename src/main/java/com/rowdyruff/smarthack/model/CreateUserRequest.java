@@ -17,4 +17,6 @@ public class CreateUserRequest {
 	
 	private Integer institutionId;
 
+	private String email;
+
 }

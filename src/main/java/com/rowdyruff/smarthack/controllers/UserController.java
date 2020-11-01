@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rowdyruff.domain.Institution;
+import com.rowdyruff.domain.Role;
 import com.rowdyruff.domain.User;
 import com.rowdyruff.repository.UserRepository;
 import com.rowdyruff.smarthack.model.AuthenticationRequest;
@@ -99,13 +100,18 @@ public class UserController extends GenericController<User> {
 	
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<?> register(@RequestBody RegisterForm registerForm) {
+		User user = new User(registerForm.getUsername(), registerForm.getPassword());
+		user.setRole(Role.ROLE_CLIENT);
 		return ResponseEntity.ok(userRepository.create(new User(registerForm.getUsername(), registerForm.getPassword())));
 	}
 	
 	@PostMapping
 	public ResponseEntity<?> createUser(@RequestBody CreateUserRequest req) {
 		try {
-			Institution institution = institutionService.getItem(req.getInstitutionId());
+			Institution institution = null;
+			if (req.getRole() != null && (req.getRole().equals(Role.ROLE_CLIENT.name()) && Role.ROLE_SUPERVISOR.equals(Role.ROLE_CLIENT.name())))
+				institution = institutionService.getItem(req.getInstitutionId());
+			
 			User user = new User(req, institution);
 			return ResponseEntity.ok(user);
 		} catch (Exception ex) {
