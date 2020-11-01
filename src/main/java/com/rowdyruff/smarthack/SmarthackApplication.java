@@ -50,43 +50,43 @@ public class SmarthackApplication {
 		} catch (Exception ex) {
 			return;
 		}		
-		String pathToDoc = "C:\\Users\\Alex\\Downloads\\Document.docx";
-		
-		Institution institution = new Institution();
-		institution.setAbreviation("ANAF");
-		institution.setName("Agentia nationala de administratie fiscala");
-		institution.setAddress("Strada gusa");
-		institution = institutionRepository.create(institution);
-		
-		DocumentTemplate templ = new DocumentTemplate();
-		try {
-		var stream = new ByteArrayInputStream(FileUtils.readFileToByteArray(new File(pathToDoc)));
-		byte[] docx = new byte[stream.available()];
-			stream.read(docx);
-			templ.setDocTemplate(docx);
-			templ.setName("CErere Y");
-			templ = documentTemplateRepository.create(templ);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		Document document = new Document();
-		document.setName("Hardcoded");
-		document.setExpirationDate(new Date());
-		document.setReleaseDate(new Date());
-		
-		//document.setDocumentBlob(docx);
-		document.setInstitution(institution);
-		document.setOwnerUser(userRepository.findOne(1));
-		document.setRequest(null);
-		document.setTemplate(templ);
-		
-		Map<String, String> fields = new HashMap<>();
-		fields.put("[placeholder]", "Mandolina");
-		fields.put("[inlocuiesc]", "victor");
-		fields.put("[data]", "castravete");
-		
-		document.setFieldsMap(fields);
-		documentRepository.create(document);
+//		String pathToDoc = "C:\\Users\\Alex\\Downloads\\Document.docx";
+//		
+//		Institution institution = new Institution();
+//		institution.setAbreviation("ANAF");
+//		institution.setName("Agentia nationala de administratie fiscala");
+//		institution.setAddress("Strada gusa");
+//		institution = institutionRepository.create(institution);
+//		
+//		DocumentTemplate templ = new DocumentTemplate();
+//		try {
+//			var stream = new ByteArrayInputStream(FileUtils.readFileToByteArray(new File(pathToDoc)));
+//			byte[] docx = new byte[stream.available()];
+//			stream.read(docx);
+//			templ.setDocTemplate(docx);
+//			templ.setName("CErere Y");
+//			templ = documentTemplateRepository.create(templ);
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
+//		Document document = new Document();
+//		document.setName("Hardcoded");
+//		document.setExpirationDate(new Date());
+//		document.setReleaseDate(new Date());
+//		
+//		//document.setDocumentBlob(docx);
+//		document.setInstitution(institution);
+//		document.setOwnerUser(userRepository.findOne(1));
+//		document.setRequest(null);
+//		document.setTemplate(templ);
+//		
+//		Map<String, String> fields = new HashMap<>();
+//		fields.put("[placeholder]", "Mandolina");
+//		fields.put("[inlocuiesc]", "victor");
+//		fields.put("[data]", "castravete");
+//		
+//		document.setFieldsMap(fields);
+//		documentRepository.create(document);
 		
 	}
 

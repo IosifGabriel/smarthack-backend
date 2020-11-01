@@ -3,6 +3,7 @@ package com.rowdyruff.smarthack.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,6 +51,13 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 		
 		return ResponseEntity.ok(service.update(item));
 	}
+	
+//	@GetMapping(value="/{institutionId}")
+//	public ResponseEntity<?> getTemplatesFromInstitution(@PathVariable("id") Integer id) {
+//		try {
+//			return ResponseEntity.ok(documentTemplateService.getTemplatesFromInstitution(id));
+//		}
+//	}
 
 	@Override
 	protected DocumentTemplate getEmptyItem() {
