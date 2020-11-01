@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -69,7 +70,8 @@ public class Request implements Serializable {
     @Column(name = "COMPLETED_FIELDS_MAP", nullable = true)
 	private Map<String, String> completedFieldsMap;
 	
-	@Transient
+	@Lob
+	@Column(name = "GENERATED_PDF_FROM_FIELDS")
 	private byte[] generatedPdfFromFieldsMap;
 
 }
