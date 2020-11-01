@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -20,6 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cloudmersive.client.ConvertDocumentApi;
+import com.cloudmersive.client.invoker.ApiClient;
+import com.cloudmersive.client.invoker.ApiException;
+import com.cloudmersive.client.invoker.Configuration;
+import com.cloudmersive.client.invoker.auth.ApiKeyAuth;
 import com.rowdyruff.domain.Document;
 import com.rowdyruff.domain.DocumentTemplate;
 import com.rowdyruff.domain.Request;
@@ -77,6 +83,33 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
 		return out.toByteArray();
 	}
 	
+	public byte[] toPdf(byte[] docx) {
+		ApiClient defaultClient = Configuration.getDefaultApiClient();
+		
+		ApiKeyAuth Apikey = (ApiKeyAuth) defaultClient.getAuthentication("Apikey");
+		Apikey.setApiKey("06ed5ce4-7051-450e-bb3f-2f93bd1f50c7");
+		ConvertDocumentApi apiInstance = new ConvertDocumentApi();
+		File file =null; 
+		try {
+			file = File.createTempFile("temp", null);
+			FileUtils.writeByteArrayToFile(file, docx);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+		    byte[] result = apiInstance.convertDocumentDocToPdf(file);
+		    
+		    return result;
+		} catch (ApiException e) {
+		    System.err.println("Exception when calling ConvertDocumentApi#convertDocumentDocToPdf");
+		    e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
+	
 	public Document createDocument(Request request, Response response) {
 		Document document = new Document();
 		DocumentTemplate template = request.getRequestedDocumentTemplate();
@@ -87,10 +120,10 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
 		document.setOwnerUser(request.getRequester());
 		document.setTemplate(template);
 		
-		if (request.getCompletedFieldsMap() != null)
-			document.setDocumentBlob(buildDocxDocument(template, request.getCompletedFieldsMap()));
-			
-		
+		if (request.getCompletedFieldsMap() != null) {
+			byte[] docx = buildDocxDocument(template, request.getCompletedFieldsMap());
+			document.setDocumentBlob(toPdf(docx));
+		}
 		
 		return document;
 	}

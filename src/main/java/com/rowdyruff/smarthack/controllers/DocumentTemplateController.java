@@ -12,16 +12,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rowdyruff.domain.DocumentTemplate;
+import com.rowdyruff.domain.User;
+import com.rowdyruff.repository.UserRepository;
 import com.rowdyruff.smarthack.model.DocumentTemplateRequest;
 import com.rowdyruff.smarthack.service.DocumentTemplateService;
 import com.rowdyruff.smarthack.service.GenericService;
 import com.rowdyruff.smarthack.service.InstitutionService;
+import com.rowdyruff.smarthack.service.UserService;
+import com.rowdyruff.smarthack.utils.JwtUtils;
 
 @RestController
 @RequestMapping("/documentTemplates")
@@ -34,6 +39,12 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 	
 	@Autowired
 	InstitutionService institutionService;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private JwtUtils jwtTokenUtil;
 
 	public DocumentTemplateController(GenericService<DocumentTemplate> service) {
 		super(service);
@@ -41,16 +52,17 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 	
 	@PostMapping
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public ResponseEntity<?> addDocumentTemplate(@ModelAttribute DocumentTemplateRequest request, @RequestParam("file") MultipartFile file) {
+	public ResponseEntity<?> addDocumentTemplate(@RequestHeader("Authorization") String jwt, @ModelAttribute DocumentTemplateRequest request, @RequestParam("file") MultipartFile file) {
 		String msg = null;
 
 		try {
+			String username = jwtTokenUtil.extractUsername(jwt);
+			User user = userRepository.findByUsername(username);
+			
 			var template = new DocumentTemplate();
-			template.setInstitution(institutionService.getItem(request.getInstitutionId()));
+			template.setInstitution(user.getInstitution());
 			template.setName(request.getName());
-			if(file == null) {
-				System.out.print("E NULL");
-			}
+			
 			byte[] arr = file.getBytes();
 			template.setDocTemplate(arr);
 			

@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -20,6 +21,11 @@ import org.docx4j.convert.out.FOSettings;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
+import com.cloudmersive.client.ConvertDocumentApi;
+import com.cloudmersive.client.invoker.ApiClient;
+import com.cloudmersive.client.invoker.ApiException;
+import com.cloudmersive.client.invoker.Configuration;
+import com.cloudmersive.client.invoker.auth.ApiKeyAuth;
 import com.rowdyruff.domain.DocumentTemplate;
 
 public class Doctest {
@@ -78,35 +84,62 @@ public class Doctest {
 	}
 	
 	public static void main(String[] args) {
-		Map<String, String> fields = new HashMap<>();
-		fields.put("SJ_PLACEHOLDER", "Mandolina");
-		fields.put("SJ_INLOCUIESC", "victor");
-		fields.put("SJ_DATA", "castravete");
+//		Map<String, String> fields = new HashMap<>();
+//		fields.put("SJ_PLACEHOLDER", "Mandolina");
+//		fields.put("SJ_INLOCUIESC", "victor");
+//		fields.put("SJ_DATA", "castravete");
+//		
+//		var template = load(pathToDoc);
+//		
+//		for (String key : fields.keySet()) {
+//			String placeH = key;
+//			String replacer = fields.get(key);
+//			replacePlaceH(placeH, replacer, template);
+//		}
+//		
+//		try {
+//			ByteArrayOutputStream out = new ByteArrayOutputStream();
+//			template.write(out);
+//			byte[] arr = out.toByteArray();
+//			
+//			toPdf(arr, fields);
+//			
+//			String target = "C:\\Users\\Alex\\Downloads\\resulting.docx";
+//			try {
+//				template.write(new FileOutputStream(new File(target)));
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		} catch (Exception ex) {
+//			
+//		}
 		
-		var template = load(pathToDoc);
+		ApiClient defaultClient = Configuration.getDefaultApiClient();
 		
-		for (String key : fields.keySet()) {
-			String placeH = key;
-			String replacer = fields.get(key);
-			replacePlaceH(placeH, replacer, template);
-		}
-		
+		ApiKeyAuth Apikey = (ApiKeyAuth) defaultClient.getAuthentication("Apikey");
+		Apikey.setApiKey("06ed5ce4-7051-450e-bb3f-2f93bd1f50c7");
+		// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+		//Apikey.setApiKeyPrefix("Token");
+		ConvertDocumentApi apiInstance = new ConvertDocumentApi();
+		File file = null;
 		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			template.write(out);
-			byte[] arr = out.toByteArray();
-			
-			toPdf(arr, fields);
-			
-			String target = "C:\\Users\\Alex\\Downloads\\resulting.docx";
-			try {
-				template.write(new FileOutputStream(new File(target)));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (Exception ex) {
-			
+			file = File.createTempFile("temp", null);
+			byte[] docx = FileUtils.readFileToByteArray(new File("C:\\Users\\Alex\\Downloads\\Document.docx"));
+			FileUtils.writeByteArrayToFile(file, docx);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		File inputFile = file; // File | Input file to perform the operation on.
+		try {
+		    byte[] result = apiInstance.convertDocumentDocToPdf(inputFile);
+		    FileUtils.writeByteArrayToFile(new File("C:\\Users\\Alex\\Downloads\\resultsxs.pdf"), result);
+		} catch (ApiException e) {
+		    System.err.println("Exception when calling ConvertDocumentApi#convertDocumentDocToPdf");
+		    e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

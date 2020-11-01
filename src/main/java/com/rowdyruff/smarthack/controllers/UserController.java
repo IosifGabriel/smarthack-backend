@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +59,19 @@ public class UserController extends GenericController<User> {
 	@RequestMapping(value = "/hello", method = RequestMethod.GET)
 	public String firstPage() {
 		return "Hello world";
+	}
+	
+	@RequestMapping(value = "/account", method = RequestMethod.GET) 
+	public ResponseEntity<?> getAccountDetails(@RequestHeader("Authorization") String jwt) {
+		try {
+			String username = jwtTokenUtil.extractUsername(jwt);
+			User user = userRepository.findByUsername(username);
+			
+			return ResponseEntity.ok(user);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
 	}
 	
 	@RequestMapping(value="/getB64String", method = RequestMethod.GET) 

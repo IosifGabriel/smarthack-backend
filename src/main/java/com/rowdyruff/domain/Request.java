@@ -49,7 +49,7 @@ public class Request implements Serializable {
 	@JoinColumn(name="INSTITUTION_ID", nullable=false, updatable=true, insertable=true)
 	private Institution institution;
 	
-	@ManyToMany(cascade={CascadeType.PERSIST}, targetEntity=Document.class)
+	@ManyToMany(cascade={CascadeType.PERSIST}, targetEntity=Document.class, fetch=FetchType.EAGER)
 	@JoinTable(name="REQUEST_DOCUMENTS",
 			joinColumns=@JoinColumn(name="REQUEST_ID"),
 			inverseJoinColumns=@JoinColumn(name="DOCUMENT_ID")
