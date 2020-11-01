@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,7 +41,7 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 	
 	@PostMapping
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public ResponseEntity<?> addDocumentTemplate(@RequestBody DocumentTemplateRequest request, @RequestParam("file") MultipartFile file) {
+	public ResponseEntity<?> addDocumentTemplate(@RequestBody DocumentTemplateRequest request, @ModelAttribute MultipartFile file) {
 		String msg = null;
 
 		try {
