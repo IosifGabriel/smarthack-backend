@@ -19,4 +19,6 @@ public interface DocumentService extends GenericService<Document> {
 	
 	public List<Document> getDocumentsOfUser(Integer userId);
 	
+	public List<String> getPlaceholdersFromDoc(byte[] doc);
+	
 }

@@ -1,5 +1,7 @@
 package com.rowdyruff.smarthack.controllers;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
@@ -22,6 +24,7 @@ import com.rowdyruff.domain.DocumentTemplate;
 import com.rowdyruff.domain.User;
 import com.rowdyruff.repository.UserRepository;
 import com.rowdyruff.smarthack.model.DocumentTemplateRequest;
+import com.rowdyruff.smarthack.service.DocumentService;
 import com.rowdyruff.smarthack.service.DocumentTemplateService;
 import com.rowdyruff.smarthack.service.GenericService;
 import com.rowdyruff.smarthack.service.InstitutionService;
@@ -42,6 +45,9 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private DocumentService documentService;
 	
 	@Autowired
 	private JwtUtils jwtTokenUtil;
@@ -66,6 +72,9 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 			byte[] arr = file.getBytes();
 			template.setDocTemplate(arr);
 			
+			List<String> placeholders = documentService.getPlaceholdersFromDoc(arr);
+			template.setRequiredFields(String.join(",", placeholders));
+			
 			msg = saveItem(template);
 			return ResponseEntity.ok(msg);
 		} catch (Exception ex) {
@@ -89,7 +98,7 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 //		return ResponseEntity.ok(service.update(item));
 //	}
 	
-	@GetMapping(value="/{institutionId}")
+	@GetMapping(value="/get/{institutionId}")
 	public ResponseEntity<?> getTemplatesFromInstitution(@PathVariable("id") Integer id) {
 		try {
 			return ResponseEntity.ok(documentTemplateService.getTemplatesFromInstitution(id));

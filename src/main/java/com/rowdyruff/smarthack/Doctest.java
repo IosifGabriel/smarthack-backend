@@ -8,8 +8,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -83,64 +88,69 @@ public class Doctest {
 		}
 	}
 	
-	public static void main(String[] args) {
-//		Map<String, String> fields = new HashMap<>();
-//		fields.put("SJ_PLACEHOLDER", "Mandolina");
-//		fields.put("SJ_INLOCUIESC", "victor");
-//		fields.put("SJ_DATA", "castravete");
-//		
-//		var template = load(pathToDoc);
-//		
-//		for (String key : fields.keySet()) {
-//			String placeH = key;
-//			String replacer = fields.get(key);
-//			replacePlaceH(placeH, replacer, template);
-//		}
-//		
-//		try {
-//			ByteArrayOutputStream out = new ByteArrayOutputStream();
-//			template.write(out);
-//			byte[] arr = out.toByteArray();
-//			
-//			toPdf(arr, fields);
-//			
-//			String target = "C:\\Users\\Alex\\Downloads\\resulting.docx";
-//			try {
-//				template.write(new FileOutputStream(new File(target)));
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		} catch (Exception ex) {
-//			
-//		}
-		
-		ApiClient defaultClient = Configuration.getDefaultApiClient();
-		
-		ApiKeyAuth Apikey = (ApiKeyAuth) defaultClient.getAuthentication("Apikey");
-		Apikey.setApiKey("06ed5ce4-7051-450e-bb3f-2f93bd1f50c7");
-		// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-		//Apikey.setApiKeyPrefix("Token");
-		ConvertDocumentApi apiInstance = new ConvertDocumentApi();
-		File file = null;
+	public static List<String> getPlaceholdersFromDoc(byte[] doc) {
+		List<String> placeholders = new ArrayList<String>();
+		XWPFDocument document = null;
 		try {
-			file = File.createTempFile("temp", null);
-			byte[] docx = FileUtils.readFileToByteArray(new File("C:\\Users\\Alex\\Downloads\\Document.docx"));
-			FileUtils.writeByteArrayToFile(file, docx);
+			document = new XWPFDocument(new ByteArrayInputStream(doc));
 		} catch (IOException e1) {
+			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		File inputFile = file; // File | Input file to perform the operation on.
+
+		for (XWPFParagraph p : document.getParagraphs()) {
+			 for (XWPFRun r : p.getRuns()) {
+				  String text = r.getText(0);
+				  if (text == null)
+					  continue;
+				  
+				  String word = text.substring(text.indexOf("[[") + 1, text.indexOf("]]") + 1);
+				  if (word != null && !word.isEmpty() && word.length() > 0) {
+					  placeholders.add(word);
+				  }
+			 }
+		}
+		
+		return placeholders;
+	}
+	
+	public static void main(String[] args) {
+		
 		try {
-		    byte[] result = apiInstance.convertDocumentDocToPdf(inputFile);
-		    FileUtils.writeByteArrayToFile(new File("C:\\Users\\Alex\\Downloads\\resultsxs.pdf"), result);
-		} catch (ApiException e) {
-		    System.err.println("Exception when calling ConvertDocumentApi#convertDocumentDocToPdf");
-		    e.printStackTrace();
+			byte[] arr = Files.readAllBytes(Paths.get("C:\\Users\\Alex\\Downloads\\DocumentReg.docx"));
+			List<String> place = getPlaceholdersFromDoc(arr);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		
+//		ApiClient defaultClient = Configuration.getDefaultApiClient();
+//		
+//		ApiKeyAuth Apikey = (ApiKeyAuth) defaultClient.getAuthentication("Apikey");
+//		Apikey.setApiKey("06ed5ce4-7051-450e-bb3f-2f93bd1f50c7");
+//		// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//		//Apikey.setApiKeyPrefix("Token");
+//		ConvertDocumentApi apiInstance = new ConvertDocumentApi();
+//		File file = null;
+//		try {
+//			file = File.createTempFile("temp", null);
+//			byte[] docx = FileUtils.readFileToByteArray(new File("C:\\Users\\Alex\\Downloads\\Document.docx"));
+//			FileUtils.writeByteArrayToFile(file, docx);
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
+//		File inputFile = file; // File | Input file to perform the operation on.
+//		try {
+//		    byte[] result = apiInstance.convertDocumentDocToPdf(inputFile);
+//		    FileUtils.writeByteArrayToFile(new File("C:\\Users\\Alex\\Downloads\\resultsxs.pdf"), result);
+//		} catch (ApiException e) {
+//		    System.err.println("Exception when calling ConvertDocumentApi#convertDocumentDocToPdf");
+//		    e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 }

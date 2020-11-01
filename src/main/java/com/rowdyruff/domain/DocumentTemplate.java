@@ -1,8 +1,10 @@
 package com.rowdyruff.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -36,6 +38,9 @@ public class DocumentTemplate implements Serializable {
 	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=false)
 	@JoinColumn(name="INSTITUTION_ID", nullable=false, updatable=true, insertable=true)
 	private Institution institution;
+	
+	@Column(name="REQUIRED_FIELDS")
+	private String requiredFields;
 
 	public DocumentTemplate(String name, byte[] docTemplate) {
 		this.name = name;

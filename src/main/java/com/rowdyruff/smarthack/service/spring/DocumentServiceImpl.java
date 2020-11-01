@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBElement;
@@ -136,6 +138,30 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
 		return docs;
 	}
 	
-	
-	
+	public List<String> getPlaceholdersFromDoc(byte[] doc) {
+		List<String> placeholders = new ArrayList<String>();
+		XWPFDocument document = null;
+		try {
+			document = new XWPFDocument(new ByteArrayInputStream(doc));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		for (XWPFParagraph p : document.getParagraphs()) {
+			 for (XWPFRun r : p.getRuns()) {
+				  String text = r.getText(0);
+				  if (text == null)
+					  continue;
+				  
+				  String word = text.substring(text.indexOf("[[") + 1, text.indexOf("]]") + 1);
+				  if (word != null && !word.isEmpty() && word.length() > 0) {
+					  placeholders.add(word);
+				  }
+			 }
+		}
+		
+		return placeholders;
+	}
 }
+	
