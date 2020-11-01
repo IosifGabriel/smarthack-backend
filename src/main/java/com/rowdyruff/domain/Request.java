@@ -2,8 +2,11 @@ package com.rowdyruff.domain;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -38,8 +41,8 @@ public class Request implements Serializable {
 	@JoinColumn(name="REQUESTER_ID", nullable=false, updatable=true, insertable=true)
 	private User requester;
 	
-	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=false)
-	@JoinColumn(name="RESPONDER_ID", nullable=false, updatable=true, insertable=true)
+	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=true)
+	@JoinColumn(name="RESPONDER_ID", nullable=true, updatable=true, insertable=true)
 	private User responder;
 	
 	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=false)
@@ -60,5 +63,9 @@ public class Request implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "RESPONSE_ID", nullable=true)
 	private Response response;
+	
+	@Convert(converter = HashMapConverterString.class)
+    @Column(name = "COMPLETED_FIELDS_MAP", nullable = true)
+	private Map<String, String> completedFieldsMap;
 
 }

@@ -16,6 +16,7 @@ import com.rowdyruff.repository.RequestRepository;
 import com.rowdyruff.repository.UserRepository;
 import com.rowdyruff.smarthack.model.RequestSubmission;
 import com.rowdyruff.smarthack.service.DocumentService;
+import com.rowdyruff.smarthack.service.DocumentTemplateService;
 import com.rowdyruff.smarthack.service.InstitutionService;
 import com.rowdyruff.smarthack.service.RequestService;
 import com.rowdyruff.smarthack.utils.JwtUtils;
@@ -31,6 +32,9 @@ public class RequestServiceImpl extends GenericServiceImpl<Request> implements R
 	
 	@Autowired
 	InstitutionService institutionService;
+	
+	@Autowired
+	DocumentTemplateService documentServiceTemplate;
 	
 	@Autowired
 	JwtUtils jwtUtils;
@@ -50,13 +54,17 @@ public class RequestServiceImpl extends GenericServiceImpl<Request> implements R
 		
 		List<Integer> documentIds = requestSubmission.getDocumentIds();
 		
-		
 		for (var id : documentIds) {
 			request.getRequiredDocuments().add(documentService.getItem(id));
 		}
 		
 		Institution institution = institutionService.getItem(requestSubmission.getInstitutionId());
 		request.setInstitution(institution);
+		
+		if (requestSubmission.getCompletedFieldsMap() != null && !requestSubmission.getCompletedFieldsMap().isEmpty())
+			request.setCompletedFieldsMap(requestSubmission.getCompletedFieldsMap());
+		
+		request.setRequestedDocumentTemplate(documentServiceTemplate.getItem(requestSubmission.getRequestedDocumentTemplateId()));
 		
 		String username = jwtUtils.extractUsername(jwt);
 		User user = userRepository.findByUsername(username);

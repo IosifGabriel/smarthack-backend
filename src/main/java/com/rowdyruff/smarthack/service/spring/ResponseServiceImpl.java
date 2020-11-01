@@ -49,7 +49,7 @@ public class ResponseServiceImpl extends GenericServiceImpl<Response> implements
 		
 		boolean accepted = true;		
 		for (var key : statuses.keySet()) {
-			if (statuses.get(key) != null)
+			if (!statuses.get(key).equals("null"))
 				accepted = false;
 		}
 		
