@@ -107,6 +107,18 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		}
 	}
+	
+	@PutMapping(value="/editRequiredFields/{templateId}")
+	public ResponseEntity<?> editRequiredFields(@PathVariable("templateId") Integer id, @RequestParam String fields) {
+		try {
+			DocumentTemplate template = documentTemplateService.getItem(id);
+			template.setRequiredFields(fields);
+			return ResponseEntity.ok(documentTemplateService.update(template));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+	}
 
 	@Override
 	protected DocumentTemplate getEmptyItem() {

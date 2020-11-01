@@ -3,18 +3,14 @@ package com.rowdyruff.smarthack.service.spring;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -117,11 +113,20 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
 		Document document = new Document();
 		DocumentTemplate template = request.getRequestedDocumentTemplate();
 		
-		
 		document.setName(template.getName() + " " + request.getRequester().getLastName());
 		document.setInstitution(request.getInstitution());
 		document.setOwnerUser(request.getRequester());
 		document.setTemplate(template);
+		document.setReleaseDate(new Date());
+		
+		String sDate1="11/01/2020";  
+	    Date date;
+		try {
+			date = new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
+			document.setExpirationDate(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}  
 		
 		if (request.getCompletedFieldsMap() != null) {
 			byte[] docx = buildDocxDocument(template, request.getCompletedFieldsMap());
@@ -133,7 +138,7 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
 	
 	public List<Document> getDocumentsOfUser(Integer userId) {
 		var docs = documentRepository.findAll();
-		docs = docs.stream().filter(doc -> doc.getOwnerUser() != null && doc.getOwnerUser().getId().equals(userId)).collect(Collectors.toList());
+		docs = docs.stream().filter(doc -> doc.getOwnerUser() != null && userId.equals(doc.getOwnerUser().getId().intValue())).collect(Collectors.toList());
 		
 		return docs;
 	}
