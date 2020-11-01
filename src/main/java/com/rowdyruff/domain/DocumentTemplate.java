@@ -4,10 +4,13 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -29,6 +32,10 @@ public class DocumentTemplate implements Serializable {
 	@Lob
 	@Column(name = "DOC_TEMPLATE")
 	private byte[] docTemplate;
+	
+	@ManyToOne(cascade={}, fetch=FetchType.EAGER, optional=false)
+	@JoinColumn(name="INSTITUTION_ID", nullable=false, updatable=true, insertable=true)
+	private Institution institution;
 
 	public DocumentTemplate(String name, byte[] docTemplate) {
 		this.name = name;
