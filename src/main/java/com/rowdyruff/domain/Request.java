@@ -67,7 +67,7 @@ public class Request implements Serializable {
 	private Response response;
 	
 	@Convert(converter = HashMapConverterString.class)
-    @Column(name = "COMPLETED_FIELDS_MAP", nullable = true)
+    @Column(name = "COMPLETED_FIELDS_MAP", nullable = true, length = 3000)
 	private Map<String, String> completedFieldsMap;
 	
 	@Lob
