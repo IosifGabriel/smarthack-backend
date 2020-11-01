@@ -109,7 +109,7 @@ public class UserController extends GenericController<User> {
 	public ResponseEntity<?> createUser(@RequestBody CreateUserRequest req) {
 		try {
 			Institution institution = null;
-			if (req.getRole() != null && (req.getRole().equals(Role.ROLE_INSTITUTION_ADMIN.name()) || req.getRole().equals(Role.ROLE_INSTITUTION_ADMIN.name())))
+			if (req.getRole() != null && (req.getRole().equals(Role.ROLE_INSTITUTION_ADMIN.name()) || req.getRole().equals(Role.ROLE_INSTITUTION_USER.name())))
 				institution = institutionService.getItem(req.getInstitutionId());
 			
 			User user = new User(req, institution);
