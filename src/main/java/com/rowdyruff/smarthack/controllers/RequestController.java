@@ -1,5 +1,7 @@
 package com.rowdyruff.smarthack.controllers;
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +61,21 @@ public class RequestController extends GenericController<Request> {
 			String username = jwtTokenUtil.extractUsername(jwt);
 			User user = userRepository.findByUsername(username);
 			return ResponseEntity.ok(requestService.getRequestsOfClerk(user.getId().intValue()));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}		
+	}
+	
+	@GetMapping("/myClientRequests")
+	@ResponseBody
+	ResponseEntity<?> getClientRequests(@RequestHeader("Authorization") String jwt) {
+		try {
+			String username = jwtTokenUtil.extractUsername(jwt);
+			User user = userRepository.findByUsername(username);
+			var items = requestService.getItems();
+			items = items.stream().filter(req -> req.getRequester().getId().equals(user.getId())).collect(Collectors.toList());
+			return ResponseEntity.ok(items);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

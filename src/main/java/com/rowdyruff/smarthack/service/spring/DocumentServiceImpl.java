@@ -128,7 +128,7 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
 			document.setDocumentBlob(toPdf(docx));
 		}
 		
-		return document;
+		return documentRepository.create(document);
 	}
 	
 	public List<Document> getDocumentsOfUser(Integer userId) {
