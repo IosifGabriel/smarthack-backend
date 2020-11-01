@@ -113,6 +113,7 @@ public class UserController extends GenericController<User> {
 				institution = institutionService.getItem(req.getInstitutionId());
 			
 			User user = new User(req, institution);
+			user = userRepository.create(user);
 			return ResponseEntity.ok(user);
 		} catch (Exception ex) {
 			ex.printStackTrace();
