@@ -151,9 +151,13 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
 		for (XWPFParagraph p : document.getParagraphs()) {
 			 for (XWPFRun r : p.getRuns()) {
 				  String text = r.getText(0);
-				  if (text == null)
+				  if (text == null || text.isBlank())
 					  continue;
 				  
+				  Integer startIndex = text.indexOf("[[") + 1;
+				  Integer endIndex = text.indexOf("]]") + 1;
+				  if (startIndex > endIndex || startIndex > text.length() || endIndex > text.length())
+					  continue;
 				  String word = text.substring(text.indexOf("[[") + 1, text.indexOf("]]") + 1);
 				  if (word != null && !word.isEmpty() && word.length() > 0) {
 					  placeholders.add(word);
