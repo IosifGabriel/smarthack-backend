@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.rowdyruff.domain.DocumentTemplate;
 import com.rowdyruff.smarthack.model.DocumentTemplateRequest;
@@ -38,16 +40,14 @@ public class DocumentTemplateController extends GenericController<DocumentTempla
 	
 	@PostMapping
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public ResponseEntity<?> addDocumentTemplate(@RequestBody DocumentTemplateRequest request) {
+	public ResponseEntity<?> addDocumentTemplate(@RequestBody DocumentTemplateRequest request, @RequestParam("file") MultipartFile file) {
 		String msg = null;
 
 		try {
 			var template = new DocumentTemplate();
 			template.setInstitution(institutionService.getItem(request.getInstitutionId()));
 			template.setName(request.getName());
-			var stream = request.getDocTemplate();
-			byte[] arr = new byte[stream.available()];
-			stream.read(arr);
+			byte[] arr = file.getBytes();
 			template.setDocTemplate(arr);
 			
 			msg = saveItem(template);

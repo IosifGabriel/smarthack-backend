@@ -11,10 +11,6 @@ public class DocumentTemplateRequest {
 	
 	private String name;
 	
-	private InputStream docTemplate;
-	
-	private FormDataContentDisposition fileDetail;
-	
 	private Integer institutionId;
 	
 }
